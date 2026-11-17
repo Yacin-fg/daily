@@ -44,10 +44,13 @@ input[type=checkbox]{width:22px;height:22px;margin:0;accent-color:var(--pr)}
 #toast span{flex:1}#toast button{background:#fff3;color:#fff;border:0}
 .nv{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .wk{display:flex;gap:4px;margin:8px 0}.wk button{flex:1;padding:6px 2px;font-size:.7rem;line-height:1.35}.big{font-size:2.2rem;width:100%;padding:18px;border-radius:18px;margin:10px 0}.cnt{display:flex;align-items:center;gap:10px;margin:8px 0}.cnt b{flex:1;text-align:center;font-size:1.3rem}.cnt button{width:46px;font-size:1.3rem}
+#fab{position:fixed;left:14px;bottom:calc(66px + env(safe-area-inset-bottom,0px));width:54px;height:54px;border-radius:50%;font-size:1.5rem;background:var(--pr);color:#fff;border:0;box-shadow:0 3px 10px #0004;z-index:5;padding:0}
+.mb{max-width:88%;padding:10px 12px;border-radius:14px;margin:8px 0;line-height:1.8}.mb.u{background:var(--pr);color:#fff;margin-inline-end:auto}.mb.b{background:var(--card);border:1px solid var(--bd);margin-inline-start:auto}
+#cb{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom,0px));display:flex;gap:6px;padding:8px 12px;background:var(--bg);border-top:1px solid var(--bd);z-index:6;max-width:640px;margin:auto}#cb input{margin:0}
 </style>
 </head>
 <body>
-<main id="v"></main><nav id="nav"></nav><div id="toast"></div><div id="sh"></div>
+<main id="v"></main><button id="fab" onclick="go2('chat')" aria-label="المدرب">💬</button><nav id="nav"></nav><div id="toast"></div><div id="sh"></div>
 <script>
 const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0'),m=(h,i=0)=>h*60+i;
 const fm=x=>pad(Math.floor(x/60))+':'+pad(x%60),pt=v=>{const[a,b]=v.split(':');return +a*60+ +b};
@@ -60,7 +63,7 @@ const X=[['صلاة الفجر والأذكار والاستعداد','prayer',6
 ['صلاة الفجر والأذكار','prayer',6,0,7,0,[6]],['فطور وترتيب اليوم','rest',7,0,8,0,[6]],['مراجعة دروس الجامعة Cours','study',8,0,10,0,[6]],['استراحة','rest',10,0,10,30,[6]],['حل TD وTP','study',10,30,12,30,[6]],['صلاة وغداء وراحة','rest',12,30,14,0,[6]],['إكمال TP أو تطبيق عملي','study',14,0,16,0,[6]],['الفرنسية','language',16,0,16,30,[6]],['الإنجليزية','language',16,30,17,0,[6]],['مراجعة وتلخيص ما أُنجز','study',17,0,18,0,[6]],['راحة ووقت عائلي','free',20,0,22,0,[6]],
 ['صلاة الفجر والأذكار','prayer',6,0,7,0,[5]],['راحة ونوم إضافي / وقت شخصي','rest',7,0,12,0,[5]],['صلاة الجمعة وغداء وراحة','prayer',12,0,15,0,[5]],['راحة ومشي خفيف','rest',15,0,16,0,[5]],['مراجعة أسبوعية لمقاييس SID','study',16,0,17,0,[5]],['الفرنسية','language',17,0,17,30,[5]],['الإنجليزية','language',17,30,18,0,[5]],['تقييم الأسبوع والتخطيط للأسبوع القادم','other',18,0,19,0,[5]],['وقت عائلي وراحة','free',19,0,21,0,[5]],['الجيم (تمارين حسب البرنامج)','gym',18,15,19,45,[0,2,3]],['الجيم (تمارين حسب البرنامج)','gym',18,15,19,45,[6]]].map((a,i)=>({id:'b'+i,t:a[0],c:a[1],s:m(a[2],a[3]),e:m(a[4],a[5]),d:[...a[6]],n:true,mod:'',k:''}));return A.concat(X)};
 const GX={'Upper A':['Bench Press','Barbell Row','Overhead Press','Lat Pulldown','Biceps Curl','Triceps Pushdown'],'Lower A':['Squat','Romanian Deadlift','Leg Press','Leg Curl','Calf Raise'],'Upper B':['Incline Dumbbell Press','Seated Cable Row','Dumbbell Shoulder Press','Pull-ups','Lateral Raise','Face Pull'],'Lower B':['Deadlift','Goblet Squat','Walking Lunges','Hip Thrust','Leg Extension','Calf Raise']};
-const defS=()=>({v:4,gx:JSON.parse(JSON.stringify(GX)),bw:[],acts:defAct(),log:{},hab:[{id:'h2',t:'النوم في الوقت المحدد'},{id:'h3',t:'المشي أو النشاط البدني'}],hl:{},jr:[],gp:{6:'Upper A',0:'Lower A',2:'Upper B',3:'Lower B'},fd:{},wl:{},wc:[],set:{qg:5,lead:10,quiet:true,qs:'23:00',qe:'06:00',notif:true}});
+const defS=()=>({v:5,gx:JSON.parse(JSON.stringify(GX)),bw:[],acts:defAct(),log:{},hab:[{id:'h2',t:'النوم في الوقت المحدد'},{id:'h3',t:'المشي أو النشاط البدني'}],hl:{},jr:[],gp:{6:'Upper A',0:'Lower A',2:'Upper B',3:'Lower B'},fd:{},wl:{},wc:[],set:{qg:5,lead:10,quiet:true,qs:'23:00',qe:'06:00',notif:false,pn:true,eod:true,et:'21:30',po:{},lat:35.7,lng:-0.63,ai:false},chat:[],eodShown:{}});
 let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 if(!S||!S.acts)S=defS();
 if(!S.v||S.v<3){S.acts=S.acts.filter(a=>!/^a(1[1-9]|2[0-2])$/.test(a.id));const have=new Set(S.acts.map(a=>a.id));defAct().filter(a=>a.id[0]==='b'&&!have.has(a.id)).forEach(a=>S.acts.push(a));S.hab=(S.hab||[]).filter(h=>!((h.id==='h0'&&h.t==='الصلاة')||(h.id==='h1'&&h.t==='قراءة القرآن')));S.gp=S.gp||{};if(JSON.stringify(S.gp)===JSON.stringify({6:'Upper',0:'Lower',2:'Upper',3:'Lower'}))S.gp={6:'Upper A',0:'Lower A',2:'Upper B',3:'Lower B'};else for(const i in S.gp){if(S.gp[i]==='Upper')S.gp[i]='Upper A';else if(S.gp[i]==='Lower')S.gp[i]='Lower A'}S.v=3}
@@ -68,7 +71,8 @@ if(S.v<4){const g=id=>S.acts.find(a=>a.id===id),a5=g('a5'),a6=g('a6'),a7=g('a7')
 if(a5&&a6&&a7&&a8&&a5.s===m(18,15)&&a5.e===m(19,15)&&a6.s===m(19,15)&&a6.e===m(20,30)&&a7.s===m(20,30)&&a7.e===m(21,0)&&a8.s===m(21,0)){a5.t='نشاط تقني';a5.d=[1,4];a5.e=m(19,45);a6.s=m(19,45);a6.e=m(20,45);a7.s=m(20,45);a7.e=m(21,15);a8.s=m(21,15)}
 if(f2&&f2.s===m(19,0)&&f2.e===m(21,0)){f2.s=m(20,0);f2.e=m(22,0)}
 defAct().filter(a=>a.id[0]==='b'&&!S.acts.some(x=>x.id===a.id)).forEach(a=>S.acts.push(a));S.v=4}
-S.fd=S.fd||{};S.wl=S.wl||{};S.wc=S.wc||[];S.set.qg=S.set.qg||5;S.gx=S.gx||JSON.parse(JSON.stringify(GX));S.bw=S.bw||[];try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+if(S.v<5){S.set.notif=false;S.v=5}
+S.fd=S.fd||{};S.wl=S.wl||{};S.wc=S.wc||[];S.set.qg=S.set.qg||5;S.gx=S.gx||JSON.parse(JSON.stringify(GX));S.bw=S.bw||[];S.chat=S.chat||[];S.eodShown=S.eodShown||{};S.set=Object.assign({pn:true,eod:true,et:'21:30',po:{},lat:35.7,lng:-0.63,ai:false},S.set);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('تعذّر الحفظ على الجهاز')}}
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const dk=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
@@ -88,9 +92,11 @@ function tg(id,k,c){setL(k,S.acts.find(z=>z.id===id),{st:c?'done':'todo'});rende
 function hb(id,c){const k=todayK();S.hl[k]=S.hl[k]||{};S.hl[k][id]=c;save();render()}
 function home(){const n=new Date(),k=dk(n),nm=nowM(),as=actsOn(n),cu=as.filter(a=>a.s<=nm&&nm<a.e),up=as.filter(a=>a.s>nm&&L(k,a.id).st!=='done').slice(0,4),p=dayPct(n)||0,ws=[];
 for(let i=0;i<7;i++){const q=dayPct(addD(n,-i));if(q!==null)ws.push(q)}
-const wp=ws.length?Math.round(ws.reduce((a,b)=>a+b,0)/ws.length):0,g=S.gp[n.getDay()],wp2=worPct(k);
+const wp=ws.length?Math.round(ws.reduce((a,b)=>a+b,0)/ws.length):0,g=S.gp[n.getDay()],wp2=worPct(k),np=nextP(),u0=unf(k),nu=u0.a.length+u0.h.length+u0.w.length+(u0.q?1:0);
 return `<div class=hero><div id=clk class=clk>${n.toLocaleTimeString('en-GB')}</div><div>${dlab(n)}</div><small style="color:#ffffffcc">خطوة صغيرة كل يوم تصنع تقدماً كبيراً</small></div>
 <div class=card><b>إنجاز اليوم: ${p}%</b>${bar(p)}<small>إنجاز الأسبوع: ${wp}%</small></div>
+<div class=card onclick="go2('wor')" style="cursor:pointer">🕌 الصلاة القادمة: <b>${np[1]}</b> ${fm(np[3])} · بعد ${np[2]>=60?Math.floor(np[2]/60)+'س ':''}${np[2]%60}د</div>
+<div class=card onclick="reviewSheet()" style="cursor:pointer">⏳ غير منجز اليوم: <b>${nu}</b> <small>(اضغط للمراجعة)</small></div>
 <div class=card onclick="go2('gym')" style="cursor:pointer">🏋️ رياضة اليوم: <b>${g||'راحة'}</b></div>
 <div class=card onclick="go2('wor')" style="cursor:pointer">🕌 العبادات اليوم: <b>${wp2}%</b>${bar(wp2)}</div>
 <div class=card>💧 الماء اليوم (الهدف 8)<div class=cnt><button onclick="wt(-1)">−</button><b>${fw(k).w}</b><button onclick="wt(1)">+</button></div></div>
@@ -169,6 +175,20 @@ return `<h3>التنبيهات</h3><div class=card>
 <div class=rw><label>من<input type=time value="${s.qs}" onchange="S.set.qs=this.value;save()"></label><label>إلى<input type=time value="${s.qe}" onchange="S.set.qe=this.value;save()"></label></div>
 <button style="width:100%" onclick="askN()">السماح بإشعارات المتصفح (الحالة: ${np})</button>
 <small>التنبيهات تعمل أثناء فتح التطبيق. لتعطيل تنبيه نشاط معيّن عدّل النشاط.</small></div>
+<h3>مواقيت الصلاة والتذكيرات</h3><div class=card>
+<label class=ck><input type=checkbox ${s.pn?'checked':''} onchange="S.set.pn=this.checked;save()"> تنبيه عند كل صلاة</label>
+<label class=ck><input type=checkbox ${s.eod?'checked':''} onchange="S.set.eod=this.checked;save()"> تنبيه آخر اليوم بالأعمال غير المنجزة</label>
+<label>وقت تنبيه آخر اليوم<input type=time value="${s.et}" onchange="S.set.et=this.value;save()"></label>
+<div class=rw><label>خط العرض<input type=number step=any value="${s.lat}" onchange="S.set.lat=+this.value;save();render()"></label><label>خط الطول<input type=number step=any value="${s.lng}" onchange="S.set.lng=+this.value;save();render()"></label></div>
+<button style="width:100%" onclick="geo()">📍 تحديد موقعي</button>
+<small>الإحداثيات الافتراضية لمدينة وهران. المواقيت محسوبة (الفجر 18° والعشاء 17°) وقد تختلف دقائق عن التقويم الرسمي، فعدّلها بالدقائق لكل صلاة:</small>
+<div class=rw>${PN.map(x=>`<label>${x[1]}<input type=number value="${(s.po||{})[x[0]]||0}" onchange="S.set.po['${x[0]}']=+this.value||0;save();render()"></label>`).join('')}</div>
+<button class=pb style="width:100%" onclick="icsAll()">📅 تنزيل تنبيهات الصلاة وآخر اليوم لـ 60 يوماً (للتقويم)</button>
+<small>التطبيق لا يستطيع إرسال تنبيهات وهو مغلق تماماً. استورد هذا الملف في تقويم Google فتصلك التنبيهات حتى والتطبيق مغلق.</small></div>
+<h3>المدرب الذكي (اختياري)</h3><div class=card><small>بدون إعداد يعمل المدرب دون إنترنت بقواعد بسيطة. للردود الذكية الحقيقية أدخل مفتاح Anthropic API الخاص بك (يحتاج حساباً ورصيداً منفصلاً عن اشتراك Claude). يُحفظ المفتاح على هاتفك فقط ولا يدخل في النسخة الاحتياطية، وتُرسل بيانات يومك إلى Anthropic عند التفعيل.</small>
+<label class=ck><input type=checkbox ${s.ai?'checked':''} onchange="S.set.ai=this.checked;save()"> تفعيل الردود الذكية</label>
+<label>مفتاح API<input type=password id=ak value="${esc(localStorage.getItem('mdt_ak')||'')}" onchange="svK()"></label>
+<label>النموذج<input id=am2 value="${esc(localStorage.getItem('mdt_am')||'claude-haiku-5-5')}" onchange="svK()"></label></div>
 <h3>العبادات</h3><div class=card><label>هدف ورد القرآن اليومي (صفحات)<input type=number min=1 value="${s.qg}" onchange="S.set.qg=+this.value||5;save()"></label></div>
 <h3>العادات اليومية</h3>${S.hab.map(h=>`<div class=row style="cursor:default"><div class=g>${esc(h.t)}</div><button onclick="dh('${h.id}')">✕</button></div>`).join('')}
 <div class=rw><input id=nh placeholder="عادة جديدة"><button class=pb onclick="addH()">إضافة</button></div>
@@ -181,7 +201,7 @@ function askN(){try{Notification.requestPermission().then(render)}catch(e){toast
 function addH(){const t=$('#nh').value.trim();if(!t)return;S.hab.push({id:'h'+Date.now(),t});save();render()}
 function dh(id){S.hab=S.hab.filter(h=>h.id!==id);save();render()}
 function expB(){const b=$('#bk');b.value=JSON.stringify(S);b.select();try{navigator.clipboard.writeText(b.value).then(()=>toast('تم النسخ. الصقه في ملاحظات واحفظه'),()=>toast('انسخ النص يدوياً'))}catch(e){toast('انسخ النص يدوياً')}}
-function impB(){try{const o=JSON.parse($('#bk').value);if(o.acts&&o.set){S=o;S.fd=S.fd||{};S.wl=S.wl||{};S.wc=S.wc||[];S.set.qg=S.set.qg||5;S.gx=S.gx||JSON.parse(JSON.stringify(GX));S.bw=S.bw||[];S.v=S.v||2}else if(o.week&&o.gym){o.gym.forEach(g=>S.jr.push({id:'j'+Math.random().toString(36).slice(2),k:g.date,c:'gym',t:g.exercise,ty:g.day,w:g.weight,r:g.reps,s:g.sets}))}else throw 0;save();toast('تم الاسترجاع');render()}catch(e){toast('النسخة غير صالحة')}}
+function impB(){try{const o=JSON.parse($('#bk').value);if(o.acts&&o.set){S=o;S.fd=S.fd||{};S.wl=S.wl||{};S.wc=S.wc||[];S.set.qg=S.set.qg||5;S.gx=S.gx||JSON.parse(JSON.stringify(GX));S.bw=S.bw||[];S.chat=S.chat||[];S.eodShown=S.eodShown||{};S.set=Object.assign({pn:true,eod:true,et:'21:30',po:{},lat:35.7,lng:-0.63,ai:false},S.set);S.v=S.v||2}else if(o.week&&o.gym){o.gym.forEach(g=>S.jr.push({id:'j'+Math.random().toString(36).slice(2),k:g.date,c:'gym',t:g.exercise,ty:g.day,w:g.weight,r:g.reps,s:g.sets}))}else throw 0;save();toast('تم الاسترجاع');render()}catch(e){toast('النسخة غير صالحة')}}
 const GYM=['Upper A','Lower A','Upper B','Lower B'],SH=['أحد','اثن','ثلا','أرب','خمي','جمع','سبت'],TZ=['سبحان الله','الحمد لله','الله أكبر','لا إله إلا الله','أستغفر الله','اللهم صل على محمد'];
 const FC=[['soda','تجنبت القازوز اليوم'],['sugar','قلّلت الحلويات والسكريات'],['home','اعتمدت على أكل البيت'],['snack','تجنبت الأكل الخفيف غير الضروري'],['veg','أكلت خضاراً وفاكهة'],['prot','وجبة غنية بالبروتين (بيض، عدس، لحم، دجاج، سمك)'],['fried','قلّلت المقالي والأكل السريع'],['late','لم آكل متأخراً قبل النوم']];
 const WG=[['الصلوات المفروضة',[['fj','الفجر'],['zh','الظهر'],['as','العصر'],['mg','المغرب'],['is','العشاء']]],['السنن والنوافل',[['rw','السنن الرواتب'],['dh','صلاة الضحى'],['wt','الوتر'],['qm','قيام الليل']]],['الأذكار',[['am','أذكار الصباح'],['pm','أذكار المساء'],['ap','أذكار بعد الصلاة'],['sl','أذكار النوم']]],['أعمال أخرى',[['sd','صدقة'],['sm','صيام نافلة'],['pr','بر الوالدين'],['sr','صلة الرحم'],['ks','الصلاة على النبي ﷺ'],['ig','الاستغفار']]]];
@@ -201,8 +221,9 @@ function tzc(){const x=wl(todayK());x.tz[tzp]=(x.tz[tzp]||0)+1;save();const b=do
 function tzr(){wl(todayK()).tz[tzp]=0;save();render()}
 function awc(){const t=$('#nw').value.trim();if(!t)return;S.wc.push({id:'w'+Date.now(),t});save();render()}
 function dwc(id){S.wc=S.wc.filter(c=>c.id!==id);save();render()}
-function worT(){const k=todayK(),x=wl(k),p=worPct(k),qt=Object.values(S.wl).reduce((a,y)=>a+(y.q||0),0),tc=x.tz[tzp]||0;
-return `<div class=card><b>إنجاز العبادات اليوم: ${p}%</b>${bar(p)}</div>
+function worT(){const pt0=ptimes(new Date()),k=todayK(),x=wl(k),p=worPct(k),qt=Object.values(S.wl).reduce((a,y)=>a+(y.q||0),0),tc=x.tz[tzp]||0;
+return `<div class=card><b>مواقيت اليوم</b><div class=rw style="gap:4px">${[['fj','الفجر'],['sr','الشروق'],['zh','الظهر'],['as','العصر'],['mg','المغرب'],['is','العشاء']].map(x=>`<div style="text-align:center"><small>${x[1]}</small><br><b dir=ltr>${fm(pt0[x[0]])}</b></div>`).join('')}</div></div>
+<div class=card><b>إنجاز العبادات اليوم: ${p}%</b>${bar(p)}</div>
 ${WG.map(g=>`<h3>${g[0]}</h3><div class=card>${g[1].map(i=>chk(i[0],i[1],x)).join('')}</div>`).join('')}
 <h3>ورد القرآن</h3><div class=card><div class=cnt><button onclick="qp(-1)">−</button><b>${x.q||0} / ${S.set.qg} صفحة</b><button onclick="qp(1)">+</button></div>${bar(Math.min(100,(x.q||0)/S.set.qg*100))}${chk('hf','مراجعة الحفظ / التدبّر',x)}<small>مجموع ما قرأت: ${qt} صفحة · الختمات: ${Math.floor(qt/604)} · تقدّم الختمة الحالية: ${Math.round((qt%604)/6.04)}%</small></div>
 <h3>المسبحة</h3><div class=card><select onchange="tzp=this.value;render()">${TZ.map(t=>`<option ${t===tzp?'selected':''}>${t}</option>`).join('')}</select><button class="pb big" onclick="tzc()">${tc}</button><div class=rw><button onclick="tzr()">تصفير هذا الذكر</button><small>مجموع اليوم: ${Object.values(x.tz).reduce((a,b)=>a+b,0)}</small></div></div>
@@ -237,19 +258,102 @@ return `<div class=card><b style="font-size:1.4rem">${l?l.w+' كغ':'—'}</b> <
 function addBw(){const v=+$('#bwv').value;if(!(v>20&&v<400))return toast('اكتب وزناً صحيحاً بالكيلوغرام');S.bw.push({id:'bw'+Date.now(),k:$('#bwk').value||todayK(),w:v});save();render()}
 function delBw(id){S.bw=S.bw.filter(x=>x.id!==id);save();render()}
 function sportT(){return `<div class=seg>${[['ex','التمارين'],['bw','وزن الجسم'],['fd','التغذية']].map(x=>`<button class="${spt===x[0]?'on':''}" onclick="spt='${x[0]}';render()">${x[1]}</button>`).join('')}</div>`+({ex:exT,bw:bwT,fd:foodT}[spt])()}
-const TABS=[['home','🏠','الرئيسية',home],['sch','🗓️','الجدول',sch],['gym','🏋️','الرياضة',sportT],['wor','🕌','العبادات',worT],['log','📝','السجل',logT],['st','📊','إحصاء',stats],['set','⚙️','الإعدادات',settings]];
-function render(){const y=scrollY;$('#v').innerHTML=TABS.find(x=>x[0]===tab)[3]();$('#nav').innerHTML=TABS.map(x=>`<button class="${tab===x[0]?'on':''}" onclick="tab='${x[0]}';render();scrollTo(0,0)"><i>${x[1]}</i>${x[2]}</button>`).join('');scrollTo(0,y)}
+const PN=[['fj','الفجر'],['zh','الظهر'],['as','العصر'],['mg','المغرب'],['is','العشاء']];
+const dr=Math.PI/180,sin=a=>Math.sin(a*dr),cos=a=>Math.cos(a*dr),tan=a=>Math.tan(a*dr),asin=x=>Math.asin(x)/dr,acos=x=>Math.acos(Math.max(-1,Math.min(1,x)))/dr,atan2=(y,x)=>Math.atan2(y,x)/dr,acot=x=>Math.atan(1/x)/dr,fa=a=>((a%360)+360)%360,fh=h=>((h%24)+24)%24;
+function ptimes(d){const lat=+S.set.lat,lng=+S.set.lng,tz=-d.getTimezoneOffset()/60,o=S.set.po||{};let Y=d.getFullYear(),M=d.getMonth()+1;const D=d.getDate();if(M<=2){Y--;M+=12}
+const A=Math.floor(Y/100),B=2-A+Math.floor(A/4),jd=Math.floor(365.25*(Y+4716))+Math.floor(30.6001*(M+1))+D+B-1524.5-lng/360;
+const sp=t=>{const dd=jd+t-2451545,g=fa(357.529+0.98560028*dd),q=fa(280.459+0.98564736*dd),ls=fa(q+1.915*sin(g)+0.02*sin(2*g)),e=23.439-3.6e-7*dd,ra=fh(atan2(cos(e)*sin(ls),cos(ls))/15);return{dc:asin(sin(e)*sin(ls)),eq:q/15-ra}};
+const mid=t=>fh(12-sp(t).eq),sat=(ang,t,ccw)=>{const dc=sp(t).dc,tm=acos((-sin(ang)-sin(dc)*sin(lat))/(cos(dc)*cos(lat)))/15;return mid(t)+(ccw?-tm:tm)},asr=t=>sat(-acot(1+tan(Math.abs(lat-sp(t).dc))),t,0);
+let T={fj:5,sr:6,zh:12,as:13,mg:18,is:18};for(let i=0;i<2;i++)T={fj:sat(18,T.fj/24,1),sr:sat(.833,T.sr/24,1),zh:mid(T.zh/24),as:asr(T.as/24),mg:sat(.833,T.mg/24,0),is:sat(17,T.is/24,0)};
+const r={};for(const k in T)r[k]=Math.round((T[k]+tz-lng/15)*60)+(o[k]||0);return r}
+function nextP(){const n=new Date(),nm=nowM(),t=ptimes(n);for(const x of PN){if(t[x[0]]>nm)return[x[0],x[1],t[x[0]]-nm,t[x[0]]]}const t2=ptimes(addD(n,1));return['fj','الفجر',1440-nm+t2.fj,t2.fj]}
+function unf(k){const d=new Date(k+'T00:00:00'),x=S.wl[k]||{c:{},q:0};return{a:actsOn(d).filter(a=>!['sleep','rest','free'].includes(a.c)&&L(k,a.id).st!=='done'),h:S.hab.filter(h=>!(S.hl[k]||{})[h.id]),w:PN.filter(i=>!x.c[i[0]]),q:(x.q||0)<S.set.qg}}
+const unN=k=>{const u=unf(k);return u.a.length+u.h.length+u.w.length+(u.q?1:0)};
+function prayEod(n,nm,k){if(S.set.pn){const t=ptimes(n);PN.forEach(x=>{const f=k+'P'+x[0];if(nm===t[x[0]]&&!fired[f]){fired[f]=1;alertUser('🕌 حان وقت صلاة '+x[1]+' ('+fm(t[x[0]])+')',null,'./')}})}
+if(S.set.eod){const f=k+'E';if(nm===pt(S.set.et)&&!fired[f]){fired[f]=1;const c=unN(k);alertUser(c?'🌙 نهاية اليوم: بقي '+c+' عمل غير منجز. اضغط لمراجعته':'🌙 نهاية اليوم: ما شاء الله، أنجزت كل شيء!',null,'./#review')}}}
+function eodCheck(){const k=todayK();S.eodShown=S.eodShown||{};if(S.set.eod&&nowM()>=pt(S.set.et)&&!S.eodShown[k]&&unN(k)){S.eodShown[k]=1;save();reviewSheet()}}
+function reviewSheet(){const k=todayK(),u=unf(k),n=unN(k);
+sheet(`<h3>🌙 مراجعة نهاية اليوم</h3>${n?`<small>بقي ${n} غير منجز</small>`:'<p>ما شاء الله، أنجزت كل شيء اليوم 🎉</p>'}
+${u.a.length?'<h3>المهام</h3>'+u.a.map(a=>`<div class=row style="cursor:default"><div class=g><b>${esc(a.t)}</b><small>${fm(a.s)}${L(k,a.id).st==='later'?' · مؤجل':''}</small></div><button class=pb onclick="rv('${a.id}','done')">تم</button><button onclick="rv('${a.id}','later')">تأجيل</button></div>`).join(''):''}
+${u.w.length?'<h3>الصلوات</h3>'+u.w.map(i=>`<label class="card ck"><input type=checkbox onchange="rw('${i[0]}')"> ${i[1]}</label>`).join(''):''}
+${u.h.length?'<h3>العادات</h3>'+u.h.map(h=>`<label class="card ck"><input type=checkbox onchange="rh('${h.id}')"> ${esc(h.t)}</label>`).join(''):''}
+${u.q?`<div class=card>📖 ورد القرآن: ${wl(k).q||0} / ${S.set.qg} <button onclick="qp(1);reviewSheet()">+1 صفحة</button></div>`:''}
+<div class=rw><button class=pb onclick="closeSh();go2('chat')">💬 تحدث مع المدرب</button><button onclick="closeSh()">إغلاق</button></div>`)}
+function rv(id,st){setL(todayK(),S.acts.find(a=>a.id===id),{st});render();reviewSheet()}
+function rw(id){wl(todayK()).c[id]=true;save();render();reviewSheet()}
+function rh(id){const k=todayK();S.hl[k]=S.hl[k]||{};S.hl[k][id]=true;save();render();reviewSheet()}
+function geo(){if(!navigator.geolocation)return toast('الجهاز لا يدعم تحديد الموقع');navigator.geolocation.getCurrentPosition(p=>{S.set.lat=+p.coords.latitude.toFixed(3);S.set.lng=+p.coords.longitude.toFixed(3);save();render();toast('تم تحديد موقعك')},()=>toast('لم يُسمح بتحديد الموقع'))}
+function svK(){try{localStorage.setItem('mdt_ak',$('#ak').value.trim());localStorage.setItem('mdt_am',$('#am2').value.trim()||'claude-haiku-5-5')}catch(e){}}
+function icsAll(){const n=new Date(),u=location.origin+location.pathname,st=new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z',Z=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//MyDailyTracker//AR','CALSCALE:GREGORIAN','X-WR-CALNAME:My Daily Tracker'],
+dt=(d,mn)=>d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(Math.floor(mn/60))+pad(mn%60)+'00',
+ev=(id,d,a,b,t,ds)=>Z.push('BEGIN:VEVENT','UID:mdt-'+id+'@daily','DTSTAMP:'+st,'DTSTART:'+dt(d,a),'DTEND:'+dt(d,b),'SUMMARY:'+t,'DESCRIPTION:'+ds,'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+t,'TRIGGER:PT0M','END:VALARM','END:VEVENT');
+for(let i=0;i<60;i++){const d=addD(n,i),t=ptimes(d),k=dk(d);if(S.set.pn)PN.forEach(x=>ev(k+x[0],d,t[x[0]],t[x[0]]+10,'🕌 صلاة '+x[1],'حان وقت صلاة '+x[1]));if(S.set.eod){const e=pt(S.set.et);ev(k+'e',d,e,e+10,'🌙 مراجعة نهاية اليوم','راجع أعمالك غير المنجزة: '+u+'#review')}}
+Z.push('END:VCALENDAR');const a=document.createElement('a'),url=URL.createObjectURL(new Blob([Z.join('\r\n')],{type:'text/calendar'}));a.href=url;a.download='my-daily-tracker-alerts.ics';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('نُزّل الملف. افتحه لاستيراده في التقويم')}
+/* ===== المدرب ===== */
+const nz=s=>String(s).replace(/[\u064B-\u0652\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').toLowerCase();
+const KW={p:['بيض','دجاج','فراخ','لحم','لحوم','سمك','حوت','تونه','سردين','عدس','حمص','فاصوليا','لوبيا','فول','جبن','لبن','زبادي','كبده','كفته','ستيك','بروتين','حليب'],v:['سلطه','خضر','خضار','شوربه','حساء','طماطم','خس','جزر','كوسه','فلفل','بصل','خيار','ملفوف','قرنبيط','سبانخ','بروكلي','لفت','قرع','باذنجان','كرنب'],f:['فاكهه','فواكه','تفاح','موز','برتقال','عنب','تمر','تين','خوخ','فراوله','مندرين','بطيخ','شمام','اناناس','كيوي','رمان','اجاص'],c:['خبز','كسره','ارز','معكرونه','مقرونه','كسكس','بطاطا','بطاطس','فريك','شوفان','رشته','تريد','سميد'],j:['مقلي','مقاليه','مقالي','شيبس','برغر','همبرغر','بيتزا','ساندويتش','ساندوتش','شاورما','فريت','حلويات','حلوي','كعك','شوكولا','شكولاطه','سكر','عصير','قازوز','كوكا','كولا','فانتا','سيلكتو','غازي','نوتيلا','دونات','كريب','غاتو','مايونيز']};
+const MW=['فطور','فطوري','فطرت','غداء','غدائي','تغديت','عشاء','عشائي','تعشيت','وجبه','وجباتي','وجبتي','اكلت','تناولت','سناك'];
+const tok=t=>{const o=new Set();t.split(/[^\u0621-\u064Aa-z0-9]+/).forEach(w=>{if(!w)return;o.add(w);const x=w.replace(/^و/,'');o.add(x);o.add(x.replace(/^ال/,''));o.add(x.replace(/^بال/,'').replace(/^ب/,''))});return o};
+const moodOf=t=>['تعبان','متعب','تعب','ارهاق','مرهق','مضغوط','كسلان','كسل','ملل','محبط','احباط','حزين','حزن','زعلان','قلق','متوتر','ما قدرت','فشلت','مقصر','تقصير','نعسان'].some(w=>t.includes(nz(w)))?'t':['سعيد','مبسوط','فرحان','نشيط','رائع','ممتاز','الحمد لله','يوم جميل','احسن'].some(w=>t.includes(nz(w)))?'h':'';
+const moodR=m=>m==='t'?'أقدّر صراحتك 🤍 التعب شعور طبيعي ولا يعني أنك مقصّر. خذ استراحة قصيرة، اشرب ماءً، وابدأ بأصغر مهمة متبقية فقط. خطوة صغيرة اليوم تكفي، وغداً يوم جديد.':'ما شاء الله، هذا خبر جميل 🌟 حافظ على ما صنع لك هذا اليوم الجميل.';
+function streak(){let n=0;for(let i=0;i<60;i++){const p=dayPct(addD(new Date(),-i));if(p!==null&&p>=60)n++;else if(i>0)break}return n}
+function leftR(k){const u=unf(k),r=[];if(u.a.length)r.push('📋 مهام: '+u.a.slice(0,6).map(a=>a.t+' ('+fm(a.s)+')').join('، '));if(u.w.length)r.push('🕌 صلوات غير مسجّلة: '+u.w.map(i=>i[1]).join('، '));if(u.q)r.push('📖 ورد القرآن لم يكتمل');if(u.h.length)r.push('✔️ عادات: '+u.h.map(h=>h.t).join('، '));return r.length?'بقي لك اليوم:\n'+r.join('\n')+'\n\nخطوة واحدة الآن تكفي، فأيّها تبدأ به؟':'ما شاء الله 🎉 أنجزت كل شيء اليوم! ارتح وتقبّل الله منك.'}
+function dayEval(){const n=new Date(),k=dk(n),as=actsOn(n).filter(a=>!['sleep','rest','free'].includes(a.c)),u=unf(k),dn=as.length-u.a.length,w=fw(k),x=wl(k),wp=worPct(k),pr=5-u.w.length,ok=FC.filter(f=>w.c[f[0]]).length,gt=S.gp[n.getDay()],gd=S.jr.some(j=>j.c==='gym'&&j.k===k)||actsOn(n).some(a=>a.c==='gym'&&L(k,a.id).st==='done'),sc=Math.round(((as.length?dn/as.length:1)*100+wp)/2),st=streak(),r=[];
+r.push((sc>=80?'🌟 يوم ممتاز!':sc>=60?'👍 يوم جيد':sc>=40?'🙂 يوم متوسط':'🌱 يوم يحتاج دفعة')+(nowM()<17*60?' (اليوم لم ينتهِ بعد، وهذا وضعك حتى الآن)':''));
+if(as.length)r.push('✅ مهام الجدول: '+dn+' من '+as.length);r.push('🕌 الصلوات المسجّلة: '+pr+'/5'+(pr===5?' — ما شاء الله!':''));r.push('📖 ورد القرآن: '+(x.q||0)+' من '+S.set.qg+' صفحة');r.push('💧 الماء: '+w.w+' من 8 أكواب');r.push('🥗 العادات الغذائية: '+ok+'/'+FC.length);
+if(gt)r.push(gd?'🏋️ أنجزت تمرين اليوم ('+gt+')':'🏋️ برنامج اليوم '+gt+' لم تسجّله بعد');
+const need=[];if(u.a.length)need.push('مهام: '+u.a.slice(0,3).map(a=>a.t).join('، '));if(u.w.length&&u.w.length<5)need.push('صلوات: '+u.w.map(i=>i[1]).join('، '));if(w.w<8)need.push('تكملة الماء');if(u.q)need.push('ورد القرآن');
+if(need.length)r.push('\n⏳ ما ينقصك: '+need.join(' · '));
+if(st>=2)r.push('🔥 '+st+' أيام متتالية بإنجاز جيد، حافظ عليها');
+r.push('\n'+(sc>=80?'استمر على هذا المستوى، أنت تبني عادة قوية 💪':sc>=60?'قريب جداً من يوم مثالي، أكمل المتبقي بهدوء.':sc>=40?'لا بأس، اختر مهمتين فقط لإنجازهما الآن والباقي غداً.':'لا تجلد نفسك، ابدأ بخطوة صغيرة الآن (كوب ماء ثم 10 دقائق مراجعة) وغداً نبدأ من جديد.'));return r.join('\n')}
+function mealR(raw,m,mood){const f=fw(todayK()),ok=[],tips=[];
+if(m.p.length)ok.push('بروتين ('+m.p.slice(0,2).join('، ')+')');else tips.push('ينقصها مصدر بروتين: بيض أو عدس أو دجاج أو سمك');
+if(m.v.length)ok.push('خضار ('+m.v.slice(0,2).join('، ')+')');else tips.push('أضف خضاراً أو سلطة لتكتمل');
+if(m.c.length)ok.push('نشويات ('+m.c.slice(0,2).join('، ')+')');if(m.f.length)ok.push('فاكهة ('+m.f.slice(0,2).join('، ')+')');
+if(m.p.length&&m.v.length&&!m.c.length)tips.push('لا بأس بها خفيفة، وأضف قليلاً من الخبز أو الأرز إن احتجت طاقة للدراسة أو التمرين');
+const good=m.p.length&&m.v.length&&!m.j.length,mid=(m.p.length||m.v.length)&&m.j.length<2;
+f.m=(f.m?f.m+' | ':'')+raw.slice(0,80);if(m.v.length)f.c.veg=true;if(m.p.length)f.c.prot=true;save();
+return (good?'🌟 وجبة متكاملة، ممتاز! حافظ على هذا النمط.':mid?'👍 وجبة جيدة وقابلة للتحسين.':'⚠️ الوجبة غير متوازنة، لا بأس، عوّضها في الوجبة القادمة.')+(ok.length?'\n✅ فيها: '+ok.join(' · '):'')+(m.j.length?'\n🚫 فيها ما يُقلَّل: '+m.j.join('، ')+'، وحاول استبداله بماء أو فاكهة أو أكل البيت':'')+(tips.length?'\n💡 '+tips.join('، ')+'.':'')+(f.w<6&&nowM()>=12*60?'\n💧 شربت '+f.w+' من 8 أكواب فقط، أكمل الماء.':'')+'\n📝 سجّلتها في ملاحظات وجباتك.'+(mood?'\n\n'+moodR(mood):'')}
+function coach(raw){const t=nz(raw),tk=tok(t),has=l=>KW[l].filter(w=>tk.has(nz(w))),m={p:has('p'),v:has('v'),f:has('f'),c:has('c'),j:has('j')},any=Object.values(m).some(a=>a.length),isMeal=any||MW.some(w=>tk.has(nz(w))),mood=moodOf(t),k=todayK(),hit=a=>a.some(x=>t.includes(nz(x)));
+if(hit(['ماذا بقي','ما بقي','المتبقي','غير منجز','ماذا تبقي','متبقي']))return leftR(k);
+if(any)return mealR(raw,m,mood);
+if(hit(['قيم','تقييم','كيف كان يومي','يومي','ملخص','حصيلة','حصيله']))return (mood?moodR(mood)+'\n\n':'')+dayEval();
+if(mood)return moodR(mood)+'\n\n'+(unN(k)?'بقي لك '+unN(k)+' من الأعمال، اكتب «ماذا بقي لي؟» لأريك إياها.':'وقد أنجزت أعمال اليوم كلها، فاهنأ.');
+if(hit(['شجع','حفز','تشجيع','حماس']))return 'أنت أقوى مما تظن 💪 '+(streak()>=2?'لديك '+streak()+' أيام متتالية بإنجاز جيد، فلا تقطعها. ':'')+'كل خطوة صغيرة تُحسب. '+(unN(k)?'ابدأ بأسهل ما بقي لك الآن، ويكفي اليوم أن تتقدم قليلاً.':'وقد أنجزت كل شيء اليوم، فاستمتع براحتك.');
+if(hit(['الصلاه القادمه','متي الصلاه','موعد الصلاه','اذان']))return (a=>'🕌 الصلاة القادمة: '+a[1]+' عند '+fm(a[3])+' (بعد '+(a[2]>=60?Math.floor(a[2]/60)+' س و ':'')+a[2]%60+' د)')(nextP());
+if(hit(['شكرا','جزاك']))return 'العفو! أنا هنا متى احتجتني 🌿';
+if(hit(['السلام','مرحبا','اهلا','صباح','مساء']))return 'وعليكم السلام ورحمة الله 🌿 كيف كان يومك؟ احكِ لي عنه أو عن وجباتك، أو اضغط «قيّم يومي».';
+if(isMeal)return 'لم أتعرّف على مكوّنات وجبتك. اذكرها بالتفصيل، مثال: «غداء: عدس وسلطة وخبز».';
+return 'أخبرني عن يومك أو وجباتك وسأقيّمها لك. مثال: «فطوري بيض وخبز وحليب»، أو اضغط «قيّم يومي».'}
+function dayCtx(){const n=new Date(),k=dk(n),as=actsOn(n).filter(a=>!['sleep','rest','free'].includes(a.c)),u=unf(k),x=wl(k),w=fw(k);return{'التاريخ':k,'الساعة':fm(nowM()),'مهام_منجزة':(as.length-u.a.length)+'/'+as.length,'مهام_غير_منجزة':u.a.map(a=>a.t),'صلوات_مسجلة':PN.filter(i=>x.c[i[0]]).map(i=>i[1]),'قرآن_صفحات':(x.q||0)+'/'+S.set.qg,'ماء_أكواب':w.w,'عادات_غذائية_منجزة':FC.filter(f=>w.c[f[0]]).map(f=>f[1]),'ملاحظات_الوجبات':w.m,'رياضة_اليوم':S.gp[n.getDay()]||'راحة'}}
+const aiSys=()=>'أنت مدرّب ودود داخل تطبيق My Daily Tracker لطالب ماستر. تحدّث بالعربية الفصحى المبسطة وبنبرة مشجعة وصادقة ومختصرة (3 إلى 6 جمل). عندما يذكر وجباته فقيّمها: هل هي متكاملة (بروتين وخضار ونشويات معتدلة) أم ينقصها شيء، واقترح تحسيناً بسيطاً. وعندما يحكي عن يومه فاستعن ببيانات اليوم أدناه، وامدح ما أُنجز، وذكّره بلطف بما نقص، وشجّعه. لا تقدّم تشخيصاً طبياً ولا تكثر الوعظ. بيانات اليوم: '+JSON.stringify(dayCtx());
+async function aiReply(){const key=localStorage.getItem('mdt_ak');if(!S.set.ai||!key)return null;const h=[];S.chat.slice(-13).forEach(x=>{const r=x.r==='u'?'user':'assistant';if(h.length&&h[h.length-1].role===r)h[h.length-1].content+='\n'+x.t;else h.push({role:r,content:x.t})});while(h.length&&h[0].role!=='user')h.shift();
+const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:localStorage.getItem('mdt_am')||'claude-haiku-5-5',max_tokens:600,system:aiSys(),messages:h})});
+if(!res.ok){toast('تعذّر الاتصال بالذكاء الاصطناعي ('+res.status+')، استعملت المدرب المحلي');return null}const d=await res.json();return d.content&&d.content[0]&&d.content[0].text||null}
+let cbusy=false;
+async function sendC(t){const el=$('#cm'),txt=(t||(el&&el.value)||'').trim();if(!txt||cbusy)return;if(el)el.value='';S.chat.push({r:'u',t:txt,k:Date.now()});const loc=coach(txt);save();cbusy=true;render();scrollTo(0,99999);let r=null;try{r=await aiReply()}catch(e){toast('تعذّر الاتصال بالإنترنت، استعملت المدرب المحلي')}
+cbusy=false;S.chat.push({r:'b',t:r||loc,k:Date.now()});S.chat=S.chat.slice(-80);save();render();scrollTo(0,99999)}
+function qc(t,pre){if(pre){const e=$('#cm');e.value=t;e.focus&&e.focus()}else sendC(t)}
+function clrC(){S.chat=[];save();render()}
+function chatT(){const m=S.chat.slice(-40);return `<div class=nv><h3 style="margin:0">💬 مدرّبك اليومي</h3><div><button onclick="clrC()">مسح</button> <button onclick="go2('home')">رجوع</button></div></div>
+<small>${S.set.ai&&localStorage.getItem('mdt_ak')?'الردود الذكية مفعّلة':'وضع بدون إنترنت (قواعد بسيطة). فعّل الردود الذكية من الإعدادات'}</small>
+<div>${m.length?m.map(x=>`<div class="mb ${x.r}">${esc(x.t).replace(/\n/g,'<br>')}</div>`).join(''):'<div class="mb b">السلام عليكم 👋 احكِ لي عن يومك أو عن وجباتك، وسأقيّمها لك وأشجعك.</div>'}${cbusy?'<div class="mb b">…</div>':''}</div>
+<div class=chips>${[['قيّم يومي'],['ماذا بقي لي اليوم؟'],['أحتاج تشجيعاً'],['وجباتي اليوم: ',1]].map(x=>`<button onclick="qc('${x[0]}',${x[1]||0})">${x[0]}</button>`).join('')}</div>
+<div id=cb><input id=cm placeholder="اكتب رسالتك..." onkeydown="if(event.key==='Enter')sendC()"><button class=pb onclick="sendC()">إرسال</button></div><div style="height:80px"></div>`}
+const TABS=[['home','🏠','الرئيسية',home],['sch','🗓️','الجدول',sch],['gym','🏋️','الرياضة',sportT],['wor','🕌','العبادات',worT],['log','📝','السجل',logT],['st','📊','إحصاء',stats],['set','⚙️','الإعدادات',settings],['chat','💬','المدرب',chatT,1]];
+function render(){const y=scrollY;$('#v').innerHTML=TABS.find(x=>x[0]===tab)[3]();$('#fab').style.display=tab==='chat'?'none':'block';$('#nav').innerHTML=TABS.filter(x=>!x[4]).map(x=>`<button class="${tab===x[0]?'on':''}" onclick="tab='${x[0]}';render();scrollTo(0,0)"><i>${x[1]}</i>${x[2]}</button>`).join('');scrollTo(0,y)}
 function hideT(){$('#toast').style.display='none'}
-function toast(t,a){const e=$('#toast');e.innerHTML='<span>'+esc(t)+'</span>'+(a?`<button onclick="snz('${a.id}')">تأجيل 10 د</button>`:'')+'<button onclick="hideT()">✕</button>';e.style.display='flex';clearTimeout(toast.h);toast.h=setTimeout(hideT,a?20000:3000)}
+function toast(t,a,u){const e=$('#toast');e.innerHTML='<span>'+esc(t)+'</span>'+(a?`<button onclick="snz('${a.id}')">تأجيل 10 د</button>`:'')+(u&&u.includes('review')?'<button onclick="hideT();reviewSheet()">عرض</button>':'')+'<button onclick="hideT()">✕</button>';e.style.display='flex';clearTimeout(toast.h);toast.h=setTimeout(hideT,a||u?20000:3000)}
 const inQ=x=>{const a=pt(S.set.qs),b=pt(S.set.qe);return a<b?x>=a&&x<b:x>=a||x<b};
-function alertUser(msg,a){try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}try{if('Notification' in window&&Notification.permission==='granted'){if(navigator.serviceWorker&&navigator.serviceWorker.ready)navigator.serviceWorker.ready.then(r=>r.showNotification('My Daily Tracker',{body:msg,icon:'icon-192.png',vibrate:[200,100,200]}));else new Notification('My Daily Tracker',{body:msg})}}catch(e){}toast(msg,a)}
+function alertUser(msg,a,u){try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}try{if('Notification' in window&&Notification.permission==='granted'){if(navigator.serviceWorker&&navigator.serviceWorker.ready)navigator.serviceWorker.ready.then(r=>r.showNotification('My Daily Tracker',{body:msg,icon:'icon-192.png',vibrate:[200,100,200],data:{url:u||'./'}}));else new Notification('My Daily Tracker',{body:msg})}}catch(e){}toast(msg,a,u)}
 function snz(id){hideT();const a=S.acts.find(z=>z.id===id);setTimeout(()=>{if(!(S.set.quiet&&inQ(nowM())))alertUser('تذكير: '+a.t,a)},600000)}
 const fired={};let lastD=todayK();
 function tick(){const n=new Date(),nm=nowM(),k=dk(n),c=$('#clk');if(c)c.textContent=n.toLocaleTimeString('en-GB');
 if(k!==lastD){lastD=k;if(tab==='home')render()}
+prayEod(n,nm,k);
 if(!S.set.notif||(S.set.quiet&&inQ(nm)))return;
 actsOn(n).forEach(a=>{if(!a.n||L(k,a.id).st==='done')return;[[a.s-S.set.lead,'قريباً: '],[a.s,'حان وقت: ']].forEach(x=>{const f=k+a.id+x[0];if(nm===x[0]&&!fired[f]){fired[f]=1;alertUser(x[1]+a.t,a)}})})}
-render();setInterval(tick,1000);
+render();setInterval(tick,1000);window.addEventListener('hashchange',()=>{if(location.hash==='#review')reviewSheet()});document.addEventListener('visibilitychange',()=>{if(!document.hidden)eodCheck()});if(location.hash==='#review')reviewSheet();else eodCheck();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
